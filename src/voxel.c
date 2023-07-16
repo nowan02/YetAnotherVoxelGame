@@ -5,10 +5,10 @@
     #include "voxel.h"
 #endif
 
-void DrawVoxel(Voxel V)
+void DrawVoxel(Voxel V,  Color color)
 {
     if(!V.Visible) return;  
-    DrawCubeV(V.Position, (Vector3) { 5, 5, 5 }, RED);
+    DrawCubeV(V.Position, (Vector3) { 5, 5, 5 }, color);
     DrawCubeWiresV(V.Position, (Vector3) { 5, 5, 5 }, WHITE);
 }
 
@@ -17,33 +17,46 @@ void DestroyVoxel(Voxel* V)
     free(V);
 }
 
+void CheckIfVisible(Voxel* V[16][16][16])
+{
+    for(int x = 1; x < 15; x++)
+    {
+        for(int y = 1; y < 15; y++)
+        {
+            for(int z = 1; z < 15; z++)
+            {
+                if(V[x-1][y][z] != NULL && V[x][y-1][z] != NULL && V[x][y][z-1] != NULL)
+                {
+                    V[x][y][z]->Visible = false;
+                }
+            }
+        }
+    }
+}
+
 Chunk* GenerateChunk(Vector3 Offset)
 {
-    Chunk *newC = malloc(sizeof(bool) + sizeof(Vector3) + sizeof(Voxel* [4096]));
+    Chunk *newC = malloc(sizeof(bool) + sizeof(Vector3) + sizeof(Voxel* [16][16][16]));
     newC->Visible = true;
     newC->Offset = Offset;
 
-    int i, x, y, z;
-    i = 0;
-
-    for(x = 0; x < 16; x++)
+    for(int x = 0; x < 16; x++)
     {
-        for(y = 0; y < 16; y++)
+        for(int y = 0; y < 16; y++)
         {
-            for(z = 0; z < 16; z++)
+            for(int z = 0; z < 16; z++)
             {
                 Voxel *newV;
                 newV = malloc(sizeof(Voxel));
                 newV->Position = (Vector3) 
                     { 
-                        x*5 + (int)newC->Offset.x*64, 
-                        y*5 + (int)newC->Offset.y*64, 
-                        z*5 + (int)newC->Offset.z*64
+                        x*5 + newC->Offset.x*80, 
+                        y*5 + newC->Offset.y*80, 
+                        z*5 + newC->Offset.z*80,
                     };
                 newV->Visible = true; // Later only visible will be drawn.
 
-                newC->Voxels[i] = newV;
-                i++;
+                newC->Voxels[x][y][z] = newV;
             }
         }
     }
@@ -51,19 +64,31 @@ Chunk* GenerateChunk(Vector3 Offset)
     return newC;
 }
 
-void DrawChunk(Chunk C)
+void DrawChunk(Chunk C, Color color)
 {
-    for(int i = 0; i < 4096; i++)
+    for(int x = 0; x < 16; x++)
     {
-        DrawVoxel(*C.Voxels[i]);
+        for(int y = 0; y < 16; y++)
+        {
+            for(int z = 0; z < 16; z++)
+            {
+                DrawVoxel(*C.Voxels[x][y][z], color);
+            }
+        }
     }
 }
 
 void DestroyChunk(Chunk* C)
 {
-    for(int i = 0; i < 4096; i++)
+    for(int x = 0; x < 16; x++)
     {
-        DestroyVoxel(C->Voxels[i]);
+        for(int y = 0; y < 16; y++)
+        {
+            for(int z = 0; z < 16; z++)
+            {
+                DestroyVoxel(C->Voxels[x][y][z]);
+            }
+        }
     }
 
     free(C);

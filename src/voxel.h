@@ -13,7 +13,7 @@ typedef struct
 Voxel;
 
 
-void DrawVoxel(Voxel V);
+void DrawVoxel(Voxel V, Color color);
 void DestroyVoxel(Voxel* V);
 void Highlight(Voxel V);
 
@@ -22,10 +22,12 @@ typedef struct
 {
     bool Visible;
     Vector3 Offset; // Offset compared to origin chunk
-    Voxel* Voxels[4096]; // 16 x 16 x 16 group of voxels
+    Voxel* Voxels[16][16][16]; // 16 x 16 x 16 group of voxels
 }
 Chunk;
 
 Chunk* GenerateChunk(Vector3 Offset);
 void DestroyChunk(Chunk* C);
-void DrawChunk(Chunk C);
+void DrawChunk(Chunk C, Color color);
+
+void CheckIfVisible(Voxel* V[16][16][16]);
