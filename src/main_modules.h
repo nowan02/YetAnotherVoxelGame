@@ -1,6 +1,6 @@
 #ifndef INCL_RAYLIB
     #define INCL_RAYLIB
-    #include <raylib.h>
+    #include "../include/raylib.h"
 #endif
 
 #ifndef INCL_STLIB
