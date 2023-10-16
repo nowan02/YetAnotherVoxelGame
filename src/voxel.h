@@ -27,6 +27,8 @@ Voxel* InitVoxel(Vector3 Position, Texture2D* VoxelTextures);
 void DrawVoxel(Voxel* V, Color color);
 // Deletes Voxel from memory
 void DestroyVoxel(Voxel* V);
+// Breaks voxel
+void BreakVoxel(Voxel* V);
 
 // Chunk
 typedef struct

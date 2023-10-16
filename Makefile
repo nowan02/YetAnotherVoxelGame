@@ -1,7 +1,7 @@
 CC=gcc
 INCLUDE=-Iinclude
 LINK=-Llib
-CFLAGS=$(INCLUDE) $(LINK) -std=c99 -Wall -lraylib -Wl,-rpath lib
+CFLAGS=$(INCLUDE) $(LINK) -std=c99 -Wall -lraylib -Wl,-rpath lib -o2
 
 BINARY=yavg
 OBJFILES=build/main.o build/voxel.o build/textures.o

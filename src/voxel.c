@@ -171,6 +171,8 @@ Chunk* GenerateChunk(Vector3 Offset, Image* VoxelTextureMap)
     newC->Visible = true;
     newC->Offset = Offset;
 
+    Texture2D* T = GetVoxelTexture(VoxelTextureMap);
+
     for(int x = 0; x < 16; x++)
     {
         for(int y = 0; y < 16; y++)
@@ -183,7 +185,7 @@ Chunk* GenerateChunk(Vector3 Offset, Image* VoxelTextureMap)
                         y*5 + newC->Offset.y*80, 
                         z*5 + newC->Offset.z*80,
                     };
-                newC->Voxels[x][y][z] = InitVoxel(pos, GetBlockTextures(VoxelTextureMap));
+                newC->Voxels[x][y][z] = InitVoxel(pos, T);
             }
         }
     }

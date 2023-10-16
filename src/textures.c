@@ -1,7 +1,7 @@
 #include "main_modules.h"
 #include <stdlib.h>
 
-Texture2D* GetBlockTextures(Image* BlockTextures)
+Texture2D* GetVoxelTexture(Image* BlockTextures)
 {
     Texture2D* tex = malloc(sizeof(Texture2D[6]));
     for(int i = 0; i < 6; i++)

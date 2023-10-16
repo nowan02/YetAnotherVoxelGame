@@ -4,4 +4,4 @@
 #endif
 
 // Slices Image file to get block textures
-Texture2D* GetBlockTextures(Image* BlockTextures);
+Texture2D* GetVoxelTexture(Image* BlockTextures);
