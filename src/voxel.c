@@ -1,7 +1,7 @@
 #include "main_modules.h"
 #include "game_modules.h"
 
-Voxel* InitVoxel(Vector3 Position, Texture2D* VoxelTextures)
+Voxel* InitVoxel(Vector3 Position, Texture2D* VoxelTextures, Model Model)
 {
     Voxel* newV;
     newV = malloc(sizeof(Voxel));
@@ -10,34 +10,27 @@ Voxel* InitVoxel(Vector3 Position, Texture2D* VoxelTextures)
     // FACES PERPENDICULAR TO X
     newV->Faces[0].Position = (Vector3) { Position.x + 2.5, Position.y, Position.z};
     newV->Faces[1].Position = (Vector3) { Position.x - 2.5, Position.y, Position.z};
-    
-    newV->Faces[0].Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
-    newV->Faces[1].Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
+
+    newV->Faces[0].Plane = Model;
+    newV->Faces[1].Plane = Model;
 
     // FACES PERPENDICULAR TO Y
     newV->Faces[2].Position = (Vector3) { Position.x, Position.y + 2.5, Position.z};
     newV->Faces[3].Position = (Vector3) { Position.x, Position.y - 2.5, Position.z};
 
-    newV->Faces[2].Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
-    newV->Faces[3].Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
+    newV->Faces[2].Plane = Model;
+    newV->Faces[3].Plane = Model;
 
     // FACES PERPENDICULAR TO Z
     newV->Faces[4].Position = (Vector3) { Position.x, Position.y, Position.z + 2.5};
     newV->Faces[5].Position = (Vector3) { Position.x, Position.y, Position.z - 2.5};
 
-    newV->Faces[4].Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
-    newV->Faces[5].Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
+    newV->Faces[4].Plane = Model;
+    newV->Faces[5].Plane = Model;
 
     for(int i = 0; i < 6; i++)
     {
-        newV->Materials[i] = LoadMaterialDefault();
-        newV->Textures[i] = VoxelTextures[i];
-
-        SetMaterialTexture(&newV->Materials[i], MATERIAL_MAP_DIFFUSE, newV->Textures[i]);
-        SetModelMeshMaterial(&newV->Faces[i].Plane, 0, 0);
-
         newV->Faces[i].Visible = true;
-        newV->Faces[i].Plane.materials = &newV->Materials[i];
     }
 
     return newV;
@@ -171,7 +164,19 @@ Chunk* GenerateChunk(Vector3 Offset, Image* VoxelTextureMap)
     newC->Visible = true;
     newC->Offset = Offset;
 
+    // SEPARATE!!!!
+    Model Plane = LoadModelFromMesh(GenMeshPlane(5.0f, 5.0f, 16, 16));
     Texture2D* T = GetVoxelTexture(VoxelTextureMap);
+
+    Plane.materialCount = 6;
+    Plane.materials = malloc(sizeof(Material[6]));
+    for(int i = 0; i < 6; i++)
+    {
+        Plane.materials[i] = LoadMaterialDefault();
+        SetMaterialTexture(&Plane.materials[i], MATERIAL_MAP_DIFFUSE, T[i]);
+        SetModelMeshMaterial(&Plane, 0, i);
+    } 
+    // SEPARATE!!!
 
     for(int x = 0; x < 16; x++)
     {
@@ -185,7 +190,7 @@ Chunk* GenerateChunk(Vector3 Offset, Image* VoxelTextureMap)
                         y*5 + newC->Offset.y*80, 
                         z*5 + newC->Offset.z*80,
                     };
-                newC->Voxels[x][y][z] = InitVoxel(pos, T);
+                newC->Voxels[x][y][z] = InitVoxel(pos, T, Plane);
             }
         }
     }

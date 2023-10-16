@@ -22,7 +22,7 @@ typedef struct
 Voxel;
 
 // Initializes Voxel
-Voxel* InitVoxel(Vector3 Position, Texture2D* VoxelTextures);
+Voxel* InitVoxel(Vector3 Position, Texture2D* VoxelTextures, Model Model);
 // Draws Voxel of a desired color
 void DrawVoxel(Voxel* V, Color color);
 // Deletes Voxel from memory

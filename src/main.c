@@ -13,7 +13,6 @@ int main(void)
     DisableCursor();
 
     Chunk* Test = GenerateChunk((Vector3) {0,0,0}, &Voxels);
-    Voxel* Vox = InitVoxel((Vector3) { 90, 0, 90}, GetVoxelTexture(&Voxels));
 
     Camera3D PlayerCamera;
     PlayerCamera.fovy = 90;
@@ -27,15 +26,13 @@ int main(void)
     {
         UpdateCamera(&PlayerCamera, CAMERA_FIRST_PERSON);
         BeginDrawing();
-            DrawFPS(10, 10);
             ClearBackground(BLACK);
             BeginMode3D(PlayerCamera);
             Ray MRay = GetMouseRay((Vector2) {0, 0}, PlayerCamera);
-
             DrawRay(MRay, WHITE);
             DrawChunk(Test, BLUE);
-            DrawVoxel(Vox, WHITE);
             EndMode3D();
+            DrawFPS(10, 10);
         EndDrawing();
     }
 
